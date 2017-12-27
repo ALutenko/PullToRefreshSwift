@@ -19,14 +19,14 @@ open class PullToRefreshView: UIView {
     // MARK: Variables
     let contentOffsetKeyPath = "contentOffset"
     let contentSizeKeyPath = "contentSize"
-    var kvoContext = "PullToRefreshKVOContext"
+    private static var kvoContext = "PullToRefreshKVOContext"
     
     fileprivate var options: PullToRefreshOption
     fileprivate var backgroundView: UIView
     fileprivate var arrow: UIImageView
     fileprivate var indicator: UIActivityIndicatorView
     fileprivate var scrollViewInsets: UIEdgeInsets = UIEdgeInsets.zero
-    fileprivate var refreshCompletion: ((Void) -> Void)?
+    fileprivate var refreshCompletion: (() -> Void)?
     fileprivate var pull: Bool = true
     
     fileprivate var positionY:CGFloat = 0 {
@@ -78,7 +78,7 @@ open class PullToRefreshView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public init(options: PullToRefreshOption, frame: CGRect, refreshCompletion :((Void) -> Void)?, down:Bool=true) {
+    public init(options: PullToRefreshOption, frame: CGRect, refreshCompletion :(() -> Void)?, down:Bool=true) {
         self.options = options
         self.refreshCompletion = refreshCompletion
 
@@ -120,17 +120,17 @@ open class PullToRefreshView: UIView {
         guard let scrollView = superView as? UIScrollView else {
             return
         }
-        scrollView.addObserver(self, forKeyPath: contentOffsetKeyPath, options: .initial, context: &kvoContext)
+        scrollView.addObserver(self, forKeyPath: contentOffsetKeyPath, options: .initial, context: &PullToRefreshView.kvoContext)
         if !pull {
-            scrollView.addObserver(self, forKeyPath: contentSizeKeyPath, options: .initial, context: &kvoContext)
+            scrollView.addObserver(self, forKeyPath: contentSizeKeyPath, options: .initial, context: &PullToRefreshView.kvoContext)
         }
     }
     
     fileprivate func removeRegister() {
         if let scrollView = superview as? UIScrollView {
-            scrollView.removeObserver(self, forKeyPath: contentOffsetKeyPath, context: &kvoContext)
+            scrollView.removeObserver(self, forKeyPath: contentOffsetKeyPath, context: &PullToRefreshView.kvoContext)
             if !pull {
-                scrollView.removeObserver(self, forKeyPath: contentSizeKeyPath, context: &kvoContext)
+                scrollView.removeObserver(self, forKeyPath: contentSizeKeyPath, context: &PullToRefreshView.kvoContext)
             }
         }
     }
@@ -150,7 +150,7 @@ open class PullToRefreshView: UIView {
             return
         }
         
-        if !(context == &kvoContext && keyPath == contentOffsetKeyPath) {
+        if !(context == &PullToRefreshView.kvoContext && keyPath == contentOffsetKeyPath) {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
             return
         }
@@ -262,7 +262,7 @@ open class PullToRefreshView: UIView {
     fileprivate func arrowRotation() {
         UIView.animate(withDuration: 0.2, delay: 0, options:[], animations: {
             // -0.0000001 for the rotation direction control
-            self.arrow.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI-0.0000001))
+            self.arrow.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi-0.0000001))
         }, completion:nil)
     }
     

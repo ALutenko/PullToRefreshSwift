@@ -84,7 +84,7 @@ open class PullToRefreshView: UIView {
 
         self.backgroundView = UIView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
         self.backgroundView.backgroundColor = self.options.backgroundColor
-        self.backgroundView.autoresizingMask = UIViewAutoresizing.flexibleWidth
+        self.backgroundView.autoresizingMask = UIView.AutoresizingMask.flexibleWidth
         
         self.arrow = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         self.arrow.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin]
@@ -92,7 +92,7 @@ open class PullToRefreshView: UIView {
         self.arrow.image = UIImage(named: PullToRefreshConst.imageName, in: Bundle(for: type(of: self)), compatibleWith: nil)
         
         
-        self.indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+        self.indicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
         self.indicator.bounds = self.arrow.bounds
         self.indicator.autoresizingMask = self.arrow.autoresizingMask
         self.indicator.hidesWhenStopped = true
@@ -160,7 +160,7 @@ open class PullToRefreshView: UIView {
         
         // Alpha set
         if PullToRefreshConst.alpha {
-            var alpha = fabs(offsetY) / (self.frame.size.height + 40)
+            var alpha = abs(offsetY) / (self.frame.size.height + 40)
             if alpha > 0.8 {
                 alpha = 0.8
             }
